@@ -83,7 +83,7 @@ router.put("/events/edit", async (req, res) => {
     }
 });
 
-router.get("/events/delete", async (req, res) => {
+router.delete("/events/delete", async (req, res) => {
     console.log(req.query);
     try {
         if (req.query.id) {

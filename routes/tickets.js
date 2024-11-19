@@ -72,10 +72,13 @@ router.get("/tickets", async (req, res) => {
                 "event"
             );
             res.status(200).json(tickets);
-        } else if (req.fields.id) {
-            const tickets = await Ticket.find({event: req.fields.id}).populate(
+        } else if (req.fields.eventId) {
+            const tickets = await Ticket.find({event: req.fields.eventId}).populate(
                 "event"
             );
+            res.status(200).json(tickets);
+        } else if (req.fields.id) {
+            const tickets = await Ticket.findById(req.fields.id);
             res.status(200).json(tickets);
         } else {
             const tickets = await Ticket.find({}).populate(

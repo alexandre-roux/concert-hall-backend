@@ -67,13 +67,19 @@ router.post("/tickets/book", async (req, res) => {
 router.post("/tickets", async (req, res) => {
     console.log(req.fields);
     try {
-        if (req.fields.mail) {
-            const tickets = await Ticket.find({mail: req.fields.mail}).populate(
+        if (req.query.email) {
+            const tickets = await Ticket.find({mail: req.query.email}).populate(
+                "event"
+            );
+            res.status(200).json(tickets);
+        } else if (req.fields.id) {
+            const tickets = await Ticket.find({event: req.fields.id}).populate(
                 "event"
             );
             res.status(200).json(tickets);
         } else {
-            res.status(400).json({error: {message: "Invalid request"}});
+            const tickets = await Ticket.find({})
+            res.status(200).json(tickets);
         }
     } catch (error) {
         res.status(400).json({error: {message: error.message}});

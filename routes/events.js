@@ -51,14 +51,15 @@ router.get("/events", async (req, res) => {
             const event = await Event.findById(req.query.id);
             res.status(200).json(event);
         } else {
-            res.status(400).json({error: {message: "Missing parameter"}});
+            const events = await Event.find({})
+            res.status(200).json(events);
         }
     } catch (error) {
         res.status(400).json({error: {message: error.message}});
     }
 });
 
-router.post("/events/edit", async (req, res) => {
+router.put("/events/edit", async (req, res) => {
     console.log(req.fields);
     try {
         if (req.fields.id) {

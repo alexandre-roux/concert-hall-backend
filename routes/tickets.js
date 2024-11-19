@@ -64,7 +64,7 @@ router.post("/tickets/book", async (req, res) => {
     }
 });
 
-router.post("/tickets", async (req, res) => {
+router.get("/tickets", async (req, res) => {
     console.log(req.fields);
     try {
         if (req.query.email) {
@@ -78,7 +78,9 @@ router.post("/tickets", async (req, res) => {
             );
             res.status(200).json(tickets);
         } else {
-            const tickets = await Ticket.find({})
+            const tickets = await Ticket.find({}).populate(
+                "event"
+            );
             res.status(200).json(tickets);
         }
     } catch (error) {

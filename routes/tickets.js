@@ -91,7 +91,7 @@ router.get("/tickets", async (req, res) => {
     }
 });
 
-router.get("/tickets/cancel", async (req, res) => {
+router.delete("/tickets/cancel", async (req, res) => {
     console.log(req.query);
     try {
         if (req.query.id) {

@@ -1,10 +1,12 @@
 const express = require("express");
 const router = express.Router();
 
-// Import des models
+// Models import
 const Event = require("../models/Event");
 const Ticket = require("../models/Ticket");
+const worker_threads = require("node:worker_threads");
 
+// Booking creation
 router.post("/tickets/book", async (req, res) => {
     console.log(req.fields);
     try {
@@ -20,10 +22,10 @@ router.post("/tickets/book", async (req, res) => {
             req.fields.seats > 0 &&
             req.fields.seats < 5
         ) {
-            // D'abord trouver l'évent associé
+            // First we need to find the event
             const event = await Event.findById(req.fields.eventId);
             if (event) {
-                // Vérifier le nombre de places restantes
+                // Check if there are enough available seats for this category
                 if (event.seats[req.fields.category] - req.fields.seats < 0) {
                     res.status(400).json({
                         error: {
@@ -31,7 +33,7 @@ router.post("/tickets/book", async (req, res) => {
                         },
                     });
                 } else {
-                    // Créer le ticket
+                    // Create booking
                     const newTicket = new Ticket({
                         mail: req.fields.mail,
                         username: req.fields.username,
@@ -41,16 +43,22 @@ router.post("/tickets/book", async (req, res) => {
                     });
                     await newTicket.save();
 
-                    // Mettre à jour le nombre de places
+                    // Update available seats
                     event.seats[req.fields.category] -= req.fields.seats;
                     await event.save();
+
+                    if (req.fields.seats === 1) {
+                        res.status(200).json({message: "One ticket successfully booked"});
+                    } else {
+                        res.status(200).json({message: req.fields.seats + " tickets successfully booked"});
+                    }
 
                     res.status(200).json({
                         message: req.fields.seats + " seats successfully booked",
                     });
                 }
             } else {
-                res.status(400).json({
+                res.status(404).json({
                     error: {
                         message: "Wrong event ID",
                     },
@@ -64,6 +72,7 @@ router.post("/tickets/book", async (req, res) => {
     }
 });
 
+// Get information on all bookings or on a specific booking or bookings made by a user (identified by his email) or all bookings for an event
 router.get("/tickets", async (req, res) => {
     console.log(req.fields);
     try {
@@ -91,6 +100,7 @@ router.get("/tickets", async (req, res) => {
     }
 });
 
+// Cancel (delete) a booking
 router.delete("/tickets/cancel", async (req, res) => {
     console.log(req.query);
     try {

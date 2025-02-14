@@ -77,19 +77,15 @@ This project is intended as a REST API for managing event and ticket data. It ca
         "name": "Crazy Frog",
         "date": "2020-02-01",
     }
-    Add a new event.
 
     Get all events
     GET /events
-    Retrieve a list of all events.
 
     Get events by date
     GET /events/availabilities?date=
-    Retrieve a list of all events at a specific date.
 
     Get event by ID
     GET /events?id=
-    Retrieve details of a specific event by ID.
 
     Update Event
     PUT /events/edit?id=
@@ -98,11 +94,9 @@ This project is intended as a REST API for managing event and ticket data. It ca
         "name": "Crazy Frog",
         "date": "2020-02-01",
     }
-    Edit details of an existing event.
 
     Delete Event
     DELETE /events/edit?id=
-    Remove an event.
 
 ### Tickets
 
@@ -115,32 +109,25 @@ This project is intended as a REST API for managing event and ticket data. It ca
         "username": "user123",
         "category": "orchestre",
         "seats": 2
-    }   
-    Add a new ticket for a specific event.
+    }
 
     Get all bookings
     GET /tickets
-    Retrieve a list of all tickets sold.
 
     Get all bookings for event
     GET /tickets?eventId=
-    Retrieve a list of all tickets sold for a specific event.
 
     Get all bookings for a user
     GET /tickets?email=
-    Retrieve a list of all tickets bought by a specific user, identified with their email.
 
     Get booking by ID
     GET /tickets?id=
-    Retrieve details of a specific ticket.
 
     Update booking
     PUT /tickets?id=
-    Edit details of an existing ticket.
 
     Cancel booking
     DELETE /tickets/cancel?id=
-    Remove a ticket.
 
 ## License
 

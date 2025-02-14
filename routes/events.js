@@ -50,6 +50,7 @@ router.get("/events/availabilities", async (req, res) => {
     }
 });
 
+// Get information about an event or about all events when no ID is provided
 router.get("/events", async (req, res) => {
     console.log(req.query);
     try {
@@ -65,20 +66,21 @@ router.get("/events", async (req, res) => {
     }
 });
 
+// Update an event
 router.put("/events/edit", async (req, res) => {
     console.log(req.fields);
     try {
         if (req.fields.id) {
-            // D'abord trouver l'évent associé
+            // First we need to find the event
             const event = await Event.findById(req.fields.id);
-            // Mettre à jour
+            // Update the event
             if (req.fields.date) event.date = req.fields.date;
             if (req.fields.name) event.name = req.fields.name;
             if (req.fields.seats && req.fields.seats.orchestre)
                 event.seats.orchestre = req.fields.seats.orchestre;
             if (req.fields.seats && req.fields.seats.mazzanine)
                 event.seats.mazzanine = req.fields.seats.mazzanine;
-            // Savegarder dans la BD
+            // Save the event in the database
             await event.save();
             res.status(200).json({message: "Event successfully updated"});
         } else {
@@ -89,6 +91,7 @@ router.put("/events/edit", async (req, res) => {
     }
 });
 
+// Delete an event
 router.delete("/events/delete", async (req, res) => {
     console.log(req.query);
     try {

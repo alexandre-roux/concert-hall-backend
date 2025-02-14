@@ -1,10 +1,11 @@
 const express = require("express");
 const router = express.Router();
 
-// Import des models
+// Models import
 const Event = require("../models/Event");
 const Ticket = require("../models/Ticket");
 
+// Event creation
 router.post("/events/create", async (req, res) => {
     console.log(req.fields);
     try {
@@ -13,14 +14,14 @@ router.post("/events/create", async (req, res) => {
             if (event.length > 0) {
                 res.status(400).json({error: {message: "Event already exists"}});
             } else {
-                // nous avons besoin du model Event ici
+                // We need Event model here
                 const newEvent = new Event({
                     name: req.fields.name,
                     date: req.fields.date,
                     seats: req.fields.seats,
                 });
                 await newEvent.save();
-                res.json({message: "Event successfully created"})
+                res.status(200).json({message: "Event successfully created"})
             }
         } else {
             res.status(400).json({error: {message: "Missing parameter"}});
@@ -30,12 +31,17 @@ router.post("/events/create", async (req, res) => {
     }
 });
 
+// Get all the events at a given date
 router.get("/events/availabilities", async (req, res) => {
     console.log(req.query);
     try {
         if (req.query.date) {
             const events = await Event.find({date: req.query.date});
-            res.status(200).json(events);
+            if (events.length > 0) {
+                res.status(200).json(events);
+            } else {
+                res.status(404).json({error: {message: "No event found for this date"}});
+            }
         } else {
             res.status(400).json({error: {message: "Missing parameter"}});
         }
